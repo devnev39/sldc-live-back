@@ -1,0 +1,268 @@
+{
+    "fields": {
+        "frequency": [161,60,98,33],
+        "date": [306,73,65,23],
+        "time": [370,73,41,23]
+    },
+    "tables": [
+        {
+            "name": "MSPGCL THERMAL",
+            "associationTag": "thermal",
+            "columns": [
+                "name", "generated"
+            ],
+            "rows": [
+                ["NASHIK",[327,137,54,32]],
+                ["KORADI",[327,186,54,32]],
+                ["KHAPERKHEDA",[327,245,54,32]],
+                ["PARAS",[327,313,54,32]],
+                ["PARLY",[326,371,54,32]],
+                ["CHANDRAPUR",[326,442,54,32]],
+                ["BHUSAWAL",[325,508,54,32]]
+            ]
+        },
+        {
+            "name": "MSPGCL HYDRO",
+            "associationTag": "hydro",
+            "columns": [
+                "name", "generated"
+            ],
+            "rows": [
+                ["KOYNA 1&2",[593,126,48,29]],
+                ["KOYNA 3",[592,147,47,29]],
+                ["KOYNA 4",[592,171,47,19]],
+                ["KDPH",[591,188,48,32]],
+                ["VTRNA",[593,211,45,25]],
+                ["TILLARY",[593,231,45,26]],
+                ["BHIRATR",[592,251,47,27]],
+                ["GHATGAR",[590,273,49,29]]
+            ]
+        },
+        {
+            "name": "Solar",
+            "associationTag": "solar",
+            "columns": [
+                "name","generated"
+            ],
+            "rows": [
+                ["SAKRI SOLAR TTL",[588,332,49,23]],
+                ["SHIRSUPHAL SOLAR",[588,361,49,21]]
+            ]
+        },
+        {
+            "name": "Other Providers",
+            "associationTag": "others",
+            "columns": [
+                "name", "generated"
+            ],
+            "rows": [
+                ["GHATGAR PUMP",[601,423,39,21]],
+                ["JINDAL (SW)",[590,457,48,15]],
+                ["ADANI",[589,474,49,21]],
+                ["IDEAL ENR",[590,488,48,22]],
+                ["RATTAN_IND-AMT",[590,507,48,21]],
+                ["RATTAN_IND-NSK",[590,531,49,21]],
+                ["BUTIBORI-REL",[590,549,47,21]],
+                ["SWPGL",[590,566,48,21]],
+                ["PIONEER",[590,584,48,21]],
+                ["RE",[590,603,48,21]],
+                ["OTHERS (IPP/CPP)",[590,619,48,21]]
+            ]
+        },
+        {
+            "name": "MUMBAI",
+            "associationTag": "mumbai",
+            "columns": [
+                "name", "generated"
+            ],
+            "rows": [
+                ["TPC HYD.",[773,377,86,26]],
+                ["TPC THM.",[773,414,86,26]],
+                ["TPC TTL.",[774,453,86,26]],
+                ["AEML GEN.",[773,488,86,26]],
+                ["MUM GEN.",[773,524,86,26]],
+                ["MUM EXCH",[772,557,86,26]],
+                ["MUM DEMD",[772,588,86,26]]
+            ]
+        },
+        {
+            "name": "CENTRAL SECTOR",
+            "associationTag": "central",
+            "columns": [
+                "state", "share","drawl","diff"
+            ],
+            "rows": [
+                ["MAH.",[989,140,54,16],[1060,140,54,16],[1134,141,54,16]],
+                ["MP.",[998,156,56,16],[1060,157,54,16],[1134,157,54,16]],
+                ["GUJ.",[989,172,54,16],[1060,173,54,16],[1134,173,54,16]],
+                ["CGARH",[989,189,54,16],[1060,189,54,16],[1134,189,54,16]],
+                ["GOA",[990,203,54,16],[1060,203,54,16],[1135,203,54,16]]
+            ]
+        },
+        {
+            "name": "UTILITY WISE",
+            "columns": [
+                "utility", "actual(drawl)"
+            ],
+            "rows": [
+                ["MSEDCL", [1057,267,59,18]],
+                ["TPCD", [1058,283,59,18]],
+                ["AEML_D", [1058,299,59,18]],
+                ["BEST", [1059,313,59,18]]
+            ]
+        },
+        {
+            "name": "C. S. GENERATION",
+            "columns": [
+                "name", "value"
+            ],
+            "associationTag": "ccs",
+            "rows": [
+                ["KORBAN", [1111,401,50,20]],
+                ["VINCHAL", [1111,416,50,20]],
+                ["GANDHAR", [1111,433,50,20]],
+                ["KAWAS", [1111,449,50,20]],
+                ["KK' PARA", [1111,465,50,20]],
+                ["TARPR PH-I", [1111,481,50,20]],
+                ["TARPR PH-II", [1111,496,50,20]],
+                ["SIPAT", [1110,510,50,20]],
+                ["SSP", [1111,526,50,20]],
+                ["RGPPL", [1111,542,50,20]],
+                ["MAUDA", [1111,557,50,20]],
+                ["CGPL MUNDRA", [1110,574,51,20]],
+                ["SOLPRN", [1109,590,50,20]],
+                ["DHARIWAL", [1109,608,52,20]]
+            ]
+        },
+        {
+            "name": "REGIONAL EXCHANGES",
+            "columns": [
+                "GRID", "SCH.", "ACT."
+            ],
+            "rows": [
+                ["WR-NR", [1006,691,64,17],[1082,693,67,17]],
+                ["WR-SR", [1006,705,64,17],[1082,705,67,17]],
+                ["WR-ER", [1006,719,63,17],[1082,719,67,17]]
+            ]
+        }
+    ],
+    "stats": [
+        {
+            "name": "THERMAL (EX BUS)",
+            "value": [300,577,77,44],
+            "tag": 1,
+            "associationTag": "thermal",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "THERMAL (GROSS)",
+            "value": [300,616,79,48],
+            "tag": 1,
+            "associationTag": "thermal",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "GAS (URAN)",
+            "value": [307,670,67,32],
+            "tag": 1,
+            "associationTag": "thermal",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "COAL+GAS",
+            "value": [303,714,71,32],
+            "tag": 1,
+            "associationTag": "thermal",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "MSPGCL TTL GEN",
+            "value": [579,392,56,27],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "STATE GEN (EXLC. MUMBAI)",
+            "value": [581,716,47,22],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "MAHAGENCO TOTAL GEN",
+            "value": [782,127,87,26],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "IPP/CPP TTL",
+            "value": [782,167,87,26],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "CS EXCH",
+            "value": [783,204,87,26],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "MUM EXCH",
+            "value": [783,245,87,26],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "MAHADISCOM TOTAL DEMAND",
+            "value": [782,284,87,26],
+            "tag": 2,
+            "associationTag": "stategen",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "HYDRO",
+            "value": [581,304,49,23],
+            "tag": 3,
+            "associationTag": "hydro",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "OTHERS TTL",
+            "value": [585,639,50,26],
+            "tag": 4,
+            "associationTag": "others",
+            "attatchAtTableEnd": true
+        },
+        {
+            "name": "STATE GEN",
+            "value": [769,674,86,28],
+            "tag": 5,
+            "associationTag": "main",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "STATE DEMAND",
+            "value": [769,715,86,28],
+            "tag": 5,
+            "associationTag": "main",
+            "attatchAtTableEnd": false
+        },
+        {
+            "name": "DSM RATE (PAISE)",
+            "value": [1093,343,76,26],
+            "tag": 6,
+            "associationTag": "utility"
+        },
+        {
+            "name" :"CS GEN. TTL.",
+            "value": [1107,633,50,18],
+            "tag": 7,
+            "associationTag": "ccs"
+        }
+    ]
+}

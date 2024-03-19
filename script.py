@@ -27,6 +27,7 @@ import resource
 from urllib.request import urlopen
 import copy
 import cv2
+import psutil
 import numpy as np
 import json
 import os
@@ -110,8 +111,11 @@ def getValue(image, box: list):
     return ''
 
 def getState() -> dict:
-    print(f"Memory used before running the script: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2} MiB")
-    prev = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2
+    process = psutil.Process()
+    print(f'Mem info before running : {process.memory_info().rss/(1024*1024)}')
+    # print(f"Memory used before running the script: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2} MiB")
+    # prev = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2
+    mem = []
     with open('schema.json', 'r') as file:
         st = json.loads(file.read())
 
@@ -121,6 +125,7 @@ def getState() -> dict:
 
     for f in fields:
         value = getValue(img, fields[f])
+        mem.append(process.memory_info().rss/(1024*1024))
         fields[f] = value
 
     fields['date'] = fields['date'].replace('.','')
@@ -150,14 +155,11 @@ def getState() -> dict:
             for item in row:
                 obj[tbl['columns'][row.index(item)]] = item
             tbl['rows'][idx] = obj
-    print(f"Memory used after running the script: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2} MiB")
-    after = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2
-    print(f'Avg. mem. used : {after-prev}')
     t = resource.getrusage(resource.RUSAGE_SELF).ru_utime + resource.getrusage(resource.RUSAGE_SELF).ru_stime
     print(f"CPU time used during script execution: {t} seconds")
     stats = {
         "time": t,
-        "memory": after-prev
+        "memory": sum(mem)/len(mem)
     }
     return (st, stats)
     

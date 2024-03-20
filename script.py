@@ -25,7 +25,6 @@
 
 import resource
 from urllib.request import urlopen
-import copy
 import cv2
 import psutil
 import numpy as np

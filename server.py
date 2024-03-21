@@ -11,6 +11,14 @@ initialize_app()
 
 db = firestore.client()
 
+def delete_collection(name):
+    sub_col_ref = db.collection("deploy").document(name).collection(name)
+    docs = sub_col_ref.list_documents(page_size = 24)
+    for doc in docs:
+        doc.delete()
+    doc_ref = db.collection("deploy").document(name)
+    doc_ref.delete()
+
 @app.get("/")
 def read_root():
     try:
@@ -26,6 +34,10 @@ def read_root():
             "stats": state['stats'],
             "server_stats": stats
         })
+        dt = datetime.timedelta(days=15)
+        past = date - dt
+        delete = str(past.date())
+        delete_collection(delete)
         print(f'Function executed at {datetime.datetime.now()}')
         return {"data": f"Collected at {datetime.datetime.now(tz=TZ)}!"}
     except Exception as ex:

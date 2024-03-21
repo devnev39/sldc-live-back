@@ -13,7 +13,7 @@ db = firestore.client()
 
 def delete_collection(name):
     sub_col_ref = db.collection("deploy").document(name).collection(name)
-    docs = sub_col_ref.list_documents(page_size = 24)
+    docs = sub_col_ref.list_documents(page_size = 32)
     for doc in docs:
         doc.delete()
     doc_ref = db.collection("deploy").document(name)

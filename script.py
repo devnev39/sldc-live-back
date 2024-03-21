@@ -26,7 +26,6 @@
 import resource
 from urllib.request import urlopen
 import cv2
-import psutil
 import numpy as np
 import json
 import os
@@ -110,11 +109,8 @@ def getValue(image, box: list):
     return ''
 
 def getState() -> dict:
-    process = psutil.Process()
-    print(f'Mem info before running : {process.memory_info().rss/(1024*1024)}')
     # print(f"Memory used before running the script: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2} MiB")
     # prev = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2
-    mem = []
     with open('schema.json', 'r') as file:
         st = json.loads(file.read())
 
@@ -124,7 +120,6 @@ def getState() -> dict:
 
     for f in fields:
         value = getValue(img, fields[f])
-        mem.append(process.memory_info().rss/(1024*1024))
         fields[f] = value
 
     fields['date'] = fields['date'].replace('.','')
@@ -158,7 +153,7 @@ def getState() -> dict:
     print(f"CPU time used during script execution: {t} seconds")
     stats = {
         "time": t,
-        "memory": sum(mem)/len(mem)
+        "memory": 0
     }
     return (st, stats)
     

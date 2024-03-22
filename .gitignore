@@ -1,3 +1,4 @@
 ocr_env/
 key.json
 *.test.py
+model/

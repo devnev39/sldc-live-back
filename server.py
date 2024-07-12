@@ -71,30 +71,34 @@ def read_root():
 
         # Store processed data in processed collection
 
-        doc_ref = db.collection('processed').document()
-        doc_ref.set({
+        doc_ref = db.collection('parsed').document(date.strftime("%Y-%m-%d"))
+        doc_ref.set({f'{date.strftime("%H:%M:%S")}':{
             "created_at": firestore.firestore.SERVER_TIMESTAMP,
             "frequency": toNumber(state['fields']['frequency']),
             "state_gen": toNumber(filterDoc(state['stats'], "name", "STATE GEN")['value']),
             "state_demand": toNumber(filterDoc(state['stats'], "name", "STATE DEMAND")['value'])
-        })
+        }}, merge=True)
 
         # Get last 91st day to delete the data from processed collection
-        past = date - datetime.timedelta(days=90)
+        past = date - datetime.timedelta(days=300)
+
+        db.collection("parsed").document(str(past.date())).delete()
+
 
         # get id of the docs
-        docs = db.collection(f'processed').order_by("created_at", direction=firestore.Query.ASCENDING).limit(24).stream()
+        # docs = db.collection(f'processed').order_by("created_at", direction=firestore.Query.ASCENDING).limit(24).stream()
+        
         # docs = [doc.id for doc in docs]
 
-        ids = []
+        # ids = []
 
-        for doc in docs:
-            if (doc.create_time < past):
-                ids.append(doc.id)
+        # for doc in docs:
+        #     if (doc.create_time < past):
+        #         ids.append(doc.id)
 
         # delete the docs
-        for id in ids:
-            db.collection("processed").document(id).delete()
+        # for id in ids:
+        #     db.collection("processed").document(id).delete()
 
         print(f'Function executed at {datetime.datetime.now()}')
         return {"data": f"Collected at {datetime.datetime.now(tz=TZ)}!"}

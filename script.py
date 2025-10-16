@@ -24,60 +24,82 @@
 # The json data is in the from of tables and fields.
 
 import resource
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 import cv2
 import numpy as np
 import json
 import os
 import textwrap
 
-os.environ['KMP_DUPLICATE_LIB_OK'] = "TRUE"
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 SAVE_INNER_STATE = False
 
 import easyocr
 
-reader = easyocr.Reader(['en'], model_storage_directory="./model")
+reader = easyocr.Reader(["en"], model_storage_directory="./model")
 
-sharp_kernel = np.array([[0, -1, 0],
-[-1, 5, -1],
-[0, -1, 0]])
+sharp_kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
 
-req = urlopen('https://mahasldc.in/wp-content/reports/sldc/report2.jpg')
-arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+URL = "https://mahasldc.in/wp-content/reports/sldc/report2.jpg"
+
+req = Request(
+    URL,
+    headers={
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/118.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+    },
+)
+
+data = None
+
+with urlopen(req) as res:
+    data = res.read()
+
+if not data:
+    raise Exception("No image data found !")
+
+arr = np.asarray(bytearray(data), dtype=np.uint8)
 img = cv2.imdecode(arr, -1)
 
 # cv2.imwrite('download.png', img)
 
+
 def show(image):
-    cv2.imshow('image', image)
+    cv2.imshow("image", image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def getValue(image, box: list):
-    x,y,w,h = box
-    crop_img = image[y:y+h, x:x+w]
+    x, y, w, h = box
+    crop_img = image[y : y + h, x : x + w]
     n_h = 150
     n_w = 200
 
     # resize -> grey -> threshold -> denoise -> result
     if SAVE_INNER_STATE:
-        cv2.imwrite(f'test/{x}_{y}_before.png', crop_img)
+        cv2.imwrite(f"test/{x}_{y}_before.png", crop_img)
 
     # Sharpening default image
 
     # cv2.imwrite(f'test/{x}_{y}_after_sharp.png', crop_img)
-    
+
     # Resizing the sharpened image
     crop_img = cv2.resize(crop_img, (n_w, n_h), interpolation=cv2.INTER_AREA)
     # cv2.imwrite(f'test/{x}_{y}_after_resize.png', crop_img)
 
-    result = reader.readtext(crop_img, allowlist="0123456789.-") 
+    result = reader.readtext(crop_img, allowlist="0123456789.-")
 
     # Convert to gray
     crop_img = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
     # cv2.imwrite(f'test/{x}_{y}_after_grey.png', crop_img)
-    
+
     # crop_img = cv2.bilateralFiltering(crop_img, 9, 75, 75)
     # crop_img = cv2.fastNlMeansDenoising(crop_img, None, 10, 7, 21)
 
@@ -91,11 +113,11 @@ def getValue(image, box: list):
         result = res
 
     # Apply Threshold
-    ret, crop_img = cv2.threshold(crop_img, 60, 255, cv2.THRESH_BINARY_INV)    
+    ret, crop_img = cv2.threshold(crop_img, 60, 255, cv2.THRESH_BINARY_INV)
     # crop_img = cv2.filter2D(crop_img, -1, sharp_kernel)
-    
+
     if SAVE_INNER_STATE:
-        cv2.imwrite(f'test/{x}_{y}_after_thresh.png', crop_img)
+        cv2.imwrite(f"test/{x}_{y}_after_thresh.png", crop_img)
 
     res = reader.readtext(crop_img, allowlist="0123456789.-")
 
@@ -105,55 +127,55 @@ def getValue(image, box: list):
         result = res
 
     if len(result):
-        return result[0][1] if len(result) else ''
-    return ''
+        return result[0][1] if len(result) else ""
+    return ""
 
-def getState() -> dict:
+
+def getState() -> tuple:
     # print(f"Memory used before running the script: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2} MiB")
     # prev = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2
-    with open('schema.json', 'r') as file:
+    with open("schema.json", "r") as file:
         st = json.loads(file.read())
 
-    stats = st['stats']
-    fields = st['fields']
-    tables = st['tables']
+    stats = st["stats"]
+    fields = st["fields"]
+    tables = st["tables"]
 
     for f in fields:
         value = getValue(img, fields[f])
         fields[f] = value
 
-    fields['date'] = fields['date'].replace('.','')
-    fields['date'] = '/'.join(textwrap.wrap(fields['date'],2))
+    fields["date"] = fields["date"].replace(".", "")
+    fields["date"] = "/".join(textwrap.wrap(fields["date"], 2))
 
-    fields['time'] = fields['time'].replace('.','').replace(':', '')
-    fields['time'] = ':'.join(textwrap.wrap(fields['time'],2))
+    fields["time"] = fields["time"].replace(".", "").replace(":", "")
+    fields["time"] = ":".join(textwrap.wrap(fields["time"], 2))
 
     for s in stats:
-        value = getValue(img, s['value'])
-        value = value.replace('\n','')
-        s['value'] = value
+        value = getValue(img, s["value"])
+        value = value.replace("\n", "")
+        s["value"] = value
 
     for tbl in tables:
-        rows = tbl['rows']
+        rows = tbl["rows"]
         for r in rows:
-            for idx,r_c in enumerate(r[1:]):
+            for idx, r_c in enumerate(r[1:]):
                 val = getValue(img, r_c)
-                val = val.replace('\n','')
-                if(val == ''):
-                    val = 'NAN'
-                r[idx+1] = val
+                val = val.replace("\n", "")
+                if val == "":
+                    val = "NAN"
+                r[idx + 1] = val
 
     for tbl in tables:
-        for idx,row in enumerate(tbl['rows']):
+        for idx, row in enumerate(tbl["rows"]):
             obj = {}
             for item in row:
-                obj[tbl['columns'][row.index(item)]] = item
-            tbl['rows'][idx] = obj
-    t = resource.getrusage(resource.RUSAGE_SELF).ru_utime + resource.getrusage(resource.RUSAGE_SELF).ru_stime
+                obj[tbl["columns"][row.index(item)]] = item
+            tbl["rows"][idx] = obj
+    t = (
+        resource.getrusage(resource.RUSAGE_SELF).ru_utime
+        + resource.getrusage(resource.RUSAGE_SELF).ru_stime
+    )
     print(f"CPU time used during script execution: {t} seconds")
-    stats = {
-        "time": t,
-        "memory": 0
-    }
+    stats = {"time": t, "memory": 0}
     return (st, stats)
-    
